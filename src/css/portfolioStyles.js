@@ -389,9 +389,11 @@ a { text-decoration:none; }
       border-radius: 6px;
     }
   
-    /* Điều chỉnh khoảng cách phần Hero để không bị Navbar đè lên */
+    /* Điều chỉnh khoảng cách phần Hero để không bị Navbar đè lên và căn giữa toàn bộ khối */
     .hero-section {
       padding-top: 110px;
+      justify-content: center; /* BỔ SUNG: Căn giữa khối lớn trên trục ngang */
+      width: 100%;             /* BỔ SUNG: Đảm bảo phủ hết chiều rộng màn hình */
     }
   
     /* Ẩn bớt các hiệu ứng bay nhảy không cần thiết trên mobile để mượt máy */
@@ -416,6 +418,191 @@ a { text-decoration:none; }
   
     .lang-btn span {
       display: none; /* Ẩn chữ EN/VI, chỉ giữ lại icon cờ trên mobile cho gọn */
+    }
+
+    /* Đảm bảo toàn bộ khung chứa nội dung Hero giãn rộng và căn giữa */
+    .hero-inner {
+      text-align: center;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    
+    /* Ép các div bọc hiệu ứng Reveal cũng phải căn giữa */
+    .hero-inner .reveal {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    
+    /* Căn giữa tiêu đề chính và tiêu đề phụ */
+    .hero-title {
+      text-align: center;
+      width: 100%;
+    }
+  
+    .hero-subtitle {
+      text-align: center;
+      width: 100%;
+    }
+  
+    /* Căn giữa và khống chế chiều rộng mô tả để không bị tràn */
+    .hero-desc {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
+    }
+  
+    /* Căn giữa hàng loạt thẻ liên hệ (Contact Chips) */
+    .hero-contacts {
+      justify-content: center;
+      width: 100%;
+    }
+  
+    /* Căn giữa cụm nút kêu gọi hành động (CTA Buttons) */
+    .hero-btns {
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Căn giữa phần tiêu đề đầu (Label, Title, Subtitle) của TẤT CẢ các Section trên mobile */
+    .section > .reveal:first-of-type {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+    }
+  
+    /* Đảm bảo chữ tiêu đề căn giữa */
+    .section-title {
+      text-align: center;
+      width: 100%;
+    }
+  
+    /* Đảm bảo mô tả phụ căn giữa và không bị lệch lề */
+    .section-sub {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
+      margin-bottom: 32px; /* Thu hẹp khoảng cách dưới tiêu đề trên mobile cho gọn */
+    }
+
+    /* 1. ÉP BUỘC khung cha ngoài cùng chuyển sang cột và căn giữa tuyệt đối */
+    .hero-section {
+      padding-top: 110px;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      width: 100% !important;
+      min-height: 100vh;
+    }
+  
+    /* 2. ÉP BUỘC khối nội dung chính giãn rộng 100% và căn giữa tất cả con */
+    .hero-inner {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 16px !important;
+      margin: 0 auto !important;
+    }
+    
+    /* Ép tất cả các thẻ chữ bên trong .hero-inner phải hiển thị căn giữa */
+    .hero-inner * {
+      text-align: center !important;
+    }
+    
+    /* Ép các div Reveal (bọc hiệu ứng xuất hiện) phải giãn rộng và căn giữa */
+    .hero-inner .reveal {
+      width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    
+    /* Căn giữa tiêu đề chính và tiêu đề phụ */
+    .hero-title {
+      text-align: center !important;
+      width: 100% !important;
+    }
+  
+    .hero-subtitle {
+      text-align: center !important;
+      width: 100% !important;
+    }
+  
+    /* Căn giữa mô tả phụ và khống chế chiều rộng */
+    .hero-desc {
+      text-align: center !important;
+      margin: 0 auto 32px auto !important;
+      max-width: 100% !important;
+    }
+  
+    /* Ép cụm thẻ liên hệ (Contact Chips) phải căn giữa màn hình */
+    .hero-contacts {
+      display: flex !important;
+      justify-content: center !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+      width: 100% !important;
+    }
+  
+    /* Ép cụm nút bấm (GitHub, LinkedIn, Copy Email) phải căn giữa đồng đều */
+    .hero-btns {
+      display: flex !important;
+      justify-content: center !important;
+      flex-wrap: wrap !important;
+      gap: 12px !important;
+      width: 100% !important;
+    }
+
+    /* Ép các Grid chuyển sang hiển thị 1 cột trên Mobile */
+    .grid-2 {
+      grid-template-columns: 1fr !important;
+    }
+    
+    .grid-3 {
+      grid-template-columns: 1fr !important;
+    }
+    
+    .sim-grid {
+      grid-template-columns: 1fr !important;
+      gap: 16px !important;
+    }
+
+    /* Thu nhỏ nhẹ padding của các card trên mobile để tiết kiệm diện tích */
+    .exp-card, .project-card, .goals-card, .quote-card {
+      padding: 20px !important;
+    }
+
+    /* Tối ưu hóa trình giả lập trên mobile để các nút tròn không bị tràn */
+    .sim-visualizer {
+      padding: 16px !important;
+      height: auto !important;
+      min-height: 320px !important;
+    }
+
+    .sim-nodes-row {
+      gap: 4px !important;
+      justify-content: space-around !important;
+      margin: 30px 0 !important;
+    }
+
+    .sim-node {
+      width: 44px !important;
+      height: 44px !important;
+      font-size: 16px !important;
+    }
+
+    .sim-node-label {
+      font-size: 8px !important;
     }
   }
   `;
