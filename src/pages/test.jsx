@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { T, THEMES, SKILLS, SKILL_LEVELS, PROJECTS } from '../data/portfolioData';
-import { getCSS } from '../css/portfolioStyles';
+import { T, THEMES, SKILLS, SKILL_LEVELS, PROJECTS } from './portfolioData';
+import { getCSS } from './portfolioStyles';
 
 // ─── Particles ────────────────────────────────────────────────────────────────
 function Particles({ theme, mousePos }) {
@@ -195,16 +195,7 @@ function SkillBar({ name, level, delay = 0 }) {
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 function Nav({ lang, setLang, isDark, setIsDark, theme, setTheme, t }) {
   const [active, setActive] = useState('hero');
-  const sections = [
-    'hero',
-    'skills',
-    'experience',
-    'projects',
-    'simulator',
-    'goals',
-    'testimonials',
-    'contact',
-  ];
+  const sections = ['hero', 'skills', 'experience', 'projects', 'simulator', 'goals', 'testimonials', 'contact'];
   const labels = t.nav;
 
   useEffect(() => {
@@ -544,290 +535,60 @@ function ProjectsSection({ t, lang }) {
   );
 }
 
-// ─── SimulatorSection (Interactive Playground) ─────────────────────────────────
+// ─── SimulatorSection ─────────────────────────────────────────────────────────
 function SimulatorSection({ t }) {
   const [flow, setFlow] = useState(0);
   const [running, setRunning] = useState(false);
   const [step, setStep] = useState(-1);
   const [logs, setLogs] = useState([]);
-  const [simTab, setSimTab] = useState('nodes'); // 'nodes' | 'database' | 'bank' | 'push'
   const terminalEndRef = useRef(null);
 
-  // SePay Iframe Linking states
-  const [linkingBank, setLinkingBank] = useState(false);
-  const [selectedBank, setSelectedBank] = useState('MBBank');
-  const [bankAccNumber, setBankAccNumber] = useState('1904040399');
-
-  // Web Push states
-  const [pushMsg, setPushMsg] = useState('🏦 Money Guard: Ví của Bảo vừa biến động giao dịch!');
-  const [sendingPush, setSendingPush] = useState(false);
-  const [pushPhoneNotification, setPushPhoneNotification] = useState('');
-
-  // Live Mock Database State
-  const initialDB = {
-    balance: 2500000,
-    daysToEmpty: 18,
-    accounts: ['Tài khoản mặc định'],
-    transactions: [
-      {
-        id: 101,
-        description: 'Mua giày sneaker',
-        amount: -850000,
-        category: 'Mua sắm',
-        date: '2026-06-25',
-      },
-    ],
-    budgets: [{ category: 'Ăn uống', limit: 2000000, spent: 1450000 }],
-  };
-  const [mockDB, setMockDB] = useState(initialDB);
-
-  // Định nghĩa các Node mạng
-  const flowNodes = [
-    { label: 'Inbound Message', icon: '💬' },
-    { label: 'Gemini Engine', icon: '🧠' },
-    { label: 'Tag Extractor', icon: '🔎' },
-    { label: 'CRUD Service', icon: '✏️' },
-    { label: 'Socket Broadcast', icon: '📡' },
+  const flowsConfig = [
+    {
+      nodes: [
+        { label: 'SePay Webhook', icon: '🏦' },
+        { label: 'Gemini AI', icon: '🧠' },
+        { label: 'Microservice API', icon: '⚙️' },
+        { label: 'Proactive Health', icon: '📊' },
+        { label: 'Web Push', icon: '📲' }
+      ],
+      steps: [
+        { node: 0, text: '📥 [BẮT ĐẦU] POST /webhook/bank-transfer - Payload nhận từ SePay...', type: 'info' },
+        { node: 0, text: '🔍 Kiểm tra chữ ký xác thực WEBHOOK_SECRET & requireUserId...', type: 'sys' },
+        { node: 1, text: '🧠 GEMINI AI: Đang làm sạch chuỗi content và phân loại danh mục tự động...', type: 'sys' },
+        { node: 1, text: '💡 GEMINI AI: Trả về JSON: {"clean_name": "Nguyen Van A chuyển khoản", "category_name": "Lương"}', type: 'info' },
+        { node: 2, text: '⚙️ SERVICE CLIENT: Tìm/tạo tài khoản mặc định và category qua API...', type: 'sys' },
+        { node: 2, text: '⚙️ SERVICE CLIENT: Gọi createTransactionApi(). Transaction event phát ra...', type: 'sys' },
+        { node: 3, text: '📊 PROACTIVE AI: Thực thi hàm getProactiveContext() để phân tích ví tiền...', type: 'sys' },
+        { node: 3, text: '📊 PROACTIVE AI: Số dư an toàn. TB đốt tiền: 120k/ngày. daysToEmpty = 25 ngày.', type: 'info' },
+        { node: 4, text: '📲 WEB PUSH: Gọi sendPushNotification(). Kích hoạt VAPID Keys...', type: 'sys' },
+        { node: -1, text: ' Ting Ting! Money Guard thông báo: Nhận 2,000,000đ từ "Nguyen Van A". Đã ghi sổ!', type: 'ok' }
+      ]
+    },
+    {
+      nodes: [
+        { label: 'User Chat', icon: '💬' },
+        { label: 'Gemini Engine', icon: '🧠' },
+        { label: 'Tag Extractor', icon: '🔎' },
+        { label: 'CRUD Service', icon: '✏️' },
+        { label: 'Socket Broadcast', icon: '📡' }
+      ],
+      steps: [
+        { node: 0, text: '💬 USER INPUT: "Xóa hộ tao món cafe 50k vừa nãy đi Bảo"', type: 'info' },
+        { node: 0, text: '🛡️ CHỐT CHẶN: Kiểm tra double-submit dựa trên lastUserMessage trong 3s...', type: 'sys' },
+        { node: 1, text: '🧠 GEMINI ENGINE: Bắt đầu sinh phản hồi chat kèm phân tích ý định...', type: 'sys' },
+        { node: 1, text: '🧠 GEMINI ENGINE: Sinh thành công. Trả về tag lệnh: <delete_transaction>{"id": 412}</delete_transaction>', type: 'info' },
+        { node: 2, text: '🔎 TAG EXTRACTOR: Chạy Regex bóc tách nội dung XML tag...', type: 'sys' },
+        { node: 2, text: '🔎 TAG EXTRACTOR: Trích xuất thành công JSON payload: { id: 412 }', type: 'info' },
+        { node: 3, text: '✏️ CRUD SERVICE: Gọi deleteTransactionApi(currentUserId, 412)...', type: 'sys' },
+        { node: 3, text: '✏️ CRUD SERVICE: API phản hồi 200 OK. Giao dịch đã xóa khỏi DB.', type: 'info' },
+        { node: 4, text: '📡 SOCKET BROADCAST: Bắn sự kiện "money-guard-sync" về phía Client...', type: 'sys' },
+        { node: -1, text: '🎉 SUCCESS: Ảo thuật đồng bộ xong! Giao diện Web tự động cập nhật giảm 50,000đ.', type: 'ok' }
+      ]
+    }
   ];
 
-  // Kịch bản xử lý log & hành động hoàn thành
-  const presets = [
-    {
-      input: 'Tôi vừa ăn bát phở gà hết 65k',
-      steps: [
-        {
-          node: 0,
-          text: '📥 [POST /chat] Nhận tin nhắn: "Tôi vừa ăn bát phở gà hết 65k"',
-          type: 'info',
-        },
-        {
-          node: 0,
-          text: '🛡️ CHỐT CHẶN: Chạy lastUserMessage check trong 3s để né double-submit...',
-          type: 'sys',
-        },
-        {
-          node: 1,
-          text: '🧠 GEMINI ENGINE: Gọi model "gemini-flash-lite-latest" phân tích cú pháp...',
-          type: 'sys',
-        },
-        {
-          node: 1,
-          text: '🧠 GEMINI ENGINE: Sinh thẻ lệnh XML: <transaction>{"amount": 65000, "category_name": "Ăn uống", "description": "Ăn phở gà", "transaction_type": "expense"}</transaction>',
-          type: 'info',
-        },
-        {
-          node: 2,
-          text: '🔎 REGEX EXTRACTOR: Tìm thấy khối XML <transaction>. Bắt đầu phân rã...',
-          type: 'sys',
-        },
-        {
-          node: 2,
-          text: '🔎 REGEX EXTRACTOR: Khớp JSON payload: { amount: 65000, category: "Ăn uống" }',
-          type: 'info',
-        },
-        {
-          node: 3,
-          text: '✏️ CRUD SERVICE: Gọi microservices client: createTransactionApi()...',
-          type: 'sys',
-        },
-        {
-          node: 3,
-          text: '🗄️ POSTGRESQL: Thêm bản ghi transaction thành công vào ai_service.message_history.',
-          type: 'sys',
-        },
-        {
-          node: 4,
-          text: '📡 SOCKET.IO: Phát sự kiện "money-guard-sync" báo hiệu cho UI đồng bộ...',
-          type: 'sys',
-        },
-        {
-          node: -1,
-          text: ' Ting Ting! Đã ghi sổ chi tiêu 65,000đ cho "Ăn phở gà" thuộc danh mục "Ăn uống".',
-          type: 'ok',
-        },
-      ],
-      onComplete: () => {
-        setMockDB((prev) => {
-          const nextBal = prev.balance - 65000;
-          return {
-            ...prev,
-            balance: nextWBalance(nextBal),
-            daysToEmpty: Math.max(1, Math.floor(nextBal / 125000)),
-            transactions: [
-              {
-                id: Date.now(),
-                description: 'Ăn phở gà',
-                amount: -65000,
-                category: 'Ăn uống',
-                date: '2026-06-26',
-              },
-              ...prev.transactions,
-            ],
-          };
-        });
-      },
-    },
-    {
-      input: 'Công ty chuyển khoản lương 15 triệu',
-      steps: [
-        {
-          node: 0,
-          text: '📥 [POST /chat] Nhận tin nhắn: "Công ty chuyển khoản lương 15 triệu"',
-          type: 'info',
-        },
-        {
-          node: 1,
-          text: '🧠 GEMINI ENGINE: Nhận diện chiều giao dịch TIỀN VÀO (isIncome = true)...',
-          type: 'sys',
-        },
-        {
-          node: 1,
-          text: '🧠 GEMINI ENGINE: Trả về XML: <transaction>{"amount": 15000000, "category_name": "Lương", "description": "Lương tháng", "transaction_type": "income"}</transaction>',
-          type: 'info',
-        },
-        {
-          node: 2,
-          text: '🔎 REGEX EXTRACTOR: Khớp JSON payload: { amount: 15000000, category_name: "Lương" }',
-          type: 'sys',
-        },
-        {
-          node: 3,
-          text: '✏️ CRUD SERVICE: Tạo bản ghi Lương qua API. account_service tự cộng balance.',
-          type: 'sys',
-        },
-        {
-          node: 4,
-          text: '📡 SOCKET.IO: Phát sự kiện đồng bộ "bank_notification" và "money-guard-sync"...',
-          type: 'sys',
-        },
-        {
-          node: -1,
-          text: ' Ting Ting! Money Guard nhận lương: +15,000,000đ. Sức khỏe tài chính cải thiện rõ rệt!',
-          type: 'ok',
-        },
-      ],
-      onComplete: () => {
-        setMockDB((prev) => {
-          const nextBal = prev.balance + 15000000;
-          return {
-            ...prev,
-            balance: nextWBalance(nextBal),
-            daysToEmpty: Math.floor(nextBal / 120000),
-            transactions: [
-              {
-                id: Date.now(),
-                description: 'Lương tháng',
-                amount: 15000000,
-                category: 'Lương',
-                date: '2026-06-26',
-              },
-              ...prev.transactions,
-            ],
-          };
-        });
-      },
-    },
-    {
-      input: 'Đặt ngân sách mua sắm là 3 triệu',
-      steps: [
-        {
-          node: 0,
-          text: '📥 [POST /chat] Nhận lệnh: "Đặt ngân sách mua sắm là 3 triệu"',
-          type: 'info',
-        },
-        {
-          node: 1,
-          text: '🧠 GEMINI ENGINE: Ý định: Thiết lập ngân sách (manage_budget)...',
-          type: 'sys',
-        },
-        {
-          node: 1,
-          text: '🧠 GEMINI ENGINE: Sinh XML: <manage_budget>{"category_name": "Mua sắm", "amount_limit": 3000000}</manage_budget>',
-          type: 'info',
-        },
-        {
-          node: 2,
-          text: '🔎 REGEX EXTRACTOR: Tìm thấy và trích xuất JSON <manage_budget>...',
-          type: 'sys',
-        },
-        {
-          node: 3,
-          text: '✏️ CRUD SERVICE: Gọi upsertBudget() để đồng bộ cấu hình qua API budgets_service...',
-          type: 'sys',
-        },
-        {
-          node: 4,
-          text: '📡 SOCKET.IO: Gửi tín hiệu đồng bộ ngân sách. Trình duyệt reload số liệu.',
-          type: 'sys',
-        },
-        {
-          node: -1,
-          text: '🎯 THÀCH CÔNG: Đã áp hạn mức 3,000,000đ cho hạng mục "Mua sắm" tháng này.',
-          type: 'ok',
-        },
-      ],
-      onComplete: () => {
-        setMockDB((prev) => {
-          const exists = prev.budgets.some((b) => b.category === 'Mua sắm');
-          const nextBudgets = exists
-            ? prev.budgets.map((b) => (b.category === 'Mua sắm' ? { ...b, limit: 3000000 } : b))
-            : [...prev.budgets, { category: 'Mua sắm', limit: 3000000, spent: 850000 }];
-          return { ...prev, budgets: nextBudgets };
-        });
-      },
-    },
-    {
-      input: 'Xóa giùm tao giao dịch giày sneaker ID 101 đi',
-      steps: [
-        {
-          node: 0,
-          text: '📥 [POST /chat] Nhận lệnh: "Xóa giùm tao giao dịch giày sneaker ID 101 đi"',
-          type: 'info',
-        },
-        {
-          node: 1,
-          text: '🧠 GEMINI ENGINE: Lục tìm ID giao dịch và nhả XML: <delete_transaction>{"id": 101}</delete_transaction>',
-          type: 'info',
-        },
-        {
-          node: 2,
-          text: '🔎 REGEX EXTRACTOR: Trích xuất lệnh xóa giao dịch ID = 101...',
-          type: 'sys',
-        },
-        {
-          node: 3,
-          text: '✏️ CRUD SERVICE: Gọi deleteTransactionApi() gửi payload qua microservices...',
-          type: 'sys',
-        },
-        {
-          node: 4,
-          text: '📡 SOCKET.IO: Phát sự kiện cập nhật. Đã xóa record 101 khỏi PostgreSQL.',
-          type: 'sys',
-        },
-        {
-          node: -1,
-          text: '🗑️ THÀNH CÔNG: Đã xóa giao dịch giày sneaker. Hoàn lại 850,000đ vào ví.',
-          type: 'ok',
-        },
-      ],
-      onComplete: () => {
-        setMockDB((prev) => {
-          const exists = prev.transactions.some((t) => t.id === 101);
-          if (!exists) return prev;
-          const nextBal = prev.balance + 850000;
-          return {
-            ...prev,
-            balance: nextWBalance(nextBal),
-            daysToEmpty: Math.floor(nextBal / 120000),
-            transactions: prev.transactions.filter((t) => t.id !== 101),
-          };
-        });
-      },
-    },
-  ];
-
-  const currentConfig = presets[flow];
-  const nextWBalance = (val) => (Number.isFinite(val) ? val : 0);
+  const currentConfig = flowsConfig[flow];
 
   useEffect(() => {
     if (terminalEndRef.current) {
@@ -835,150 +596,31 @@ function SimulatorSection({ t }) {
     }
   }, [logs]);
 
-  const runSimulation = (presetIdx) => {
-    if (running || linkingBank || sendingPush) return;
-    setFlow(presetIdx);
+  const runSimulation = () => {
+    if (running) return;
     setRunning(true);
     setLogs([]);
     setStep(-1);
-    setSimTab('nodes');
 
-    const cfg = presets[presetIdx];
     let currentStep = 0;
-
     const interval = setInterval(() => {
-      if (currentStep < cfg.steps.length) {
-        const nextStepData = cfg.steps[currentStep];
+      if (currentStep < currentConfig.steps.length) {
+        const nextStepData = currentConfig.steps[currentStep];
         setStep(nextStepData.node);
         setLogs((prev) => [...prev, nextStepData]);
         currentStep++;
       } else {
         clearInterval(interval);
-        cfg.onComplete();
         setRunning(false);
       }
-    }, 1100);
+    }, 1200);
   };
 
-  // Giả lập liên kết Bankhub SePay Iframe
-  const runBankLinking = () => {
-    if (running || linkingBank || sendingPush) return;
-    setLinkingBank(true);
-    setLogs([]);
-    setSimTab('nodes');
-
-    const logsList = [
-      {
-        node: 0,
-        text: '📥 [GET] /create-bank - Yêu cầu khởi tạo Token SePay Bankhub Sandbox...',
-        type: 'info',
-      },
-      {
-        node: 1,
-        text: '🔑 Got Token: Gửi Basic Auth và nhận access_token thành công.',
-        type: 'sys',
-      },
-      {
-        node: 2,
-        text: '🔗 LinkToken: Gửi complete_redirect_uri và khởi tạo link liên kết thành công.',
-        type: 'sys',
-      },
-      {
-        node: 3,
-        text: '🌐 SePay Iframe: Khởi tạo Iframe Bankhub cho client chọn ngân hàng...',
-        type: 'info',
-      },
-      {
-        node: 3,
-        text: `📩 postMessage: Nhận sự kiện FINISHED_BANK_ACCOUNT_LINK: {"account_number": "${bankAccNumber}", "bank_name": "${selectedBank}"}`,
-        type: 'ok',
-      },
-      {
-        node: 4,
-        text: `💾 [POST] /save-bank-account - Gọi API createBankAccount() của account_service...`,
-        type: 'sys',
-      },
-      {
-        node: -1,
-        text: `🎉 THÀNH CÔNG: Đã thêm tài khoản "${selectedBank} - ${bankAccNumber}" vào cơ sở dữ liệu!`,
-        type: 'ok',
-      },
-    ];
-
-    let currentStep = 0;
-    const interval = setInterval(() => {
-      if (currentStep < logsList.length) {
-        const nextLog = logsList[currentStep];
-        if (nextLog.node !== -1) setStep(nextLog.node);
-        setLogs((prev) => [...prev, nextLog]);
-        currentStep++;
-      } else {
-        clearInterval(interval);
-        setMockDB((prev) => ({
-          ...prev,
-          accounts: [...prev.accounts, `${selectedBank} - ${bankAccNumber}`],
-        }));
-        setLinkingBank(false);
-      }
-    }, 1000);
-  };
-
-  // Giả lập bắn Web Push qua VAPID
-  const runWebPushNotification = () => {
-    if (running || linkingBank || sendingPush) return;
-    setIsScanning(false);
-    setSimTab('scan'); // Dùng Tab screen điện thoại để hiển thị Push
-    setIsScanning(true); // Sử dụng cờ quét để hiện màn hình Loading của điện thoại
-    setLogs([]);
-
-    const pushLogs = [
-      {
-        node: 0,
-        text: `📥 [POST] /subscribe - Đăng ký ServiceWorker VAPID Public Key thành công.`,
-        type: 'sys',
-      },
-      {
-        node: 1,
-        text: `📲 WebPush: Đang chuẩn bị mã hóa Payload bằng Private VAPID Key...`,
-        type: 'sys',
-      },
-      {
-        node: 2,
-        text: `📡 Socket.io: Phát tín hiệu "bank_notification" và "money-guard-sync" về trình duyệt...`,
-        type: 'info',
-      },
-      {
-        node: 3,
-        text: `📲 WebPush: Đang phát thông báo tới tất cả các thiết bị đăng ký hoạt động...`,
-        type: 'sys',
-      },
-      { node: -1, text: `✅ SUCCESS: Phát thông báo đẩy thành công!`, type: 'ok' },
-    ];
-
-    let currentStep = 0;
-    const interval = setInterval(() => {
-      if (currentStep < pushLogs.length) {
-        const nextLog = pushLogs[currentStep];
-        if (nextLog.node !== -1) setStep(nextLog.node);
-        setLogs((prev) => [...prev, nextLog]);
-        currentStep++;
-      } else {
-        clearInterval(interval);
-        setPushPhoneNotification(pushMsg);
-        setIsScanning(false);
-        // Tắt thông báo sau 4 giây
-        setTimeout(() => setPushPhoneNotification(''), 4000);
-      }
-    }, 1000);
-  };
-
-  const resetMockDB = () => {
-    if (running || linkingBank || sendingPush) return;
-    setMockDB(initialDB);
+  const handleFlowChange = (e) => {
+    setFlow(Number(e.target.value));
     setLogs([]);
     setStep(-1);
-    setPushPhoneNotification('');
-    setSimTab('nodes');
+    setRunning(false);
   };
 
   return (
@@ -995,43 +637,26 @@ function SimulatorSection({ t }) {
         <Reveal delay={100}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div className="sim-controls">
-              <label
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: 1,
-                  textTransform: 'uppercase',
-                  marginBottom: 8,
-                  color: 'var(--text-4)',
-                }}
-              >
+              <label style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6, color: 'var(--text-4)' }}>
                 {t.simulator.selectFlow}
               </label>
-
-              <div className="sim-preset-grid">
+              <select className="sim-select" onChange={handleFlowChange} value={flow} disabled={running}>
                 {t.simulator.flows.map((f, i) => (
-                  <button
-                    key={i}
-                    className="sim-preset-btn"
-                    onClick={() => runSimulation(i)}
-                    disabled={running || linkingBank || sendingPush}
-                  >
-                    <span>{f.name}</span>
-                  </button>
+                  <option key={i} value={i}>
+                    {f.name}
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
-
-            <div className="sim-desc-box">{t.simulator.flows[flow].desc}</div>
-
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-              <button
-                className="btn-outline"
-                onClick={resetMockDB}
-                disabled={running || linkingBank || sendingPush}
-                style={{ padding: '10px 24px', fontSize: 13, width: '100%' }}
-              >
-                🔄 {t.simulator.resetBtn}
+            <div className="sim-desc-box">
+              {t.simulator.flows[flow].desc}
+            </div>
+            <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
+              <button className="btn-primary" onClick={runSimulation} disabled={running} style={{ padding: '10px 24px', fontSize: 13 }}>
+                <span>{running ? t.simulator.running : t.simulator.runBtn}</span>
+              </button>
+              <button className="btn-outline" onClick={() => { setLogs([]); setStep(-1); setRunning(false); }} disabled={running} style={{ padding: '10px 24px', fontSize: 13 }}>
+                {t.simulator.resetBtn}
               </button>
             </div>
           </div>
@@ -1040,318 +665,31 @@ function SimulatorSection({ t }) {
         <Reveal delay={200}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div className="sim-visualizer">
-              <div className="sim-tabs-nav">
-                <span
-                  className={`sim-tab-title${simTab === 'nodes' ? ' active' : ''}`}
-                  onClick={() => setSimTab('nodes')}
-                >
-                  {t.simulator.flowTitle}
-                </span>
-                <span
-                  className={`sim-tab-title${simTab === 'database' ? ' active' : ''}`}
-                  onClick={() => setSimTab('database')}
-                >
-                  {t.simulator.mockDbTitle}
-                </span>
-                <span
-                  className={`sim-tab-title${simTab === 'bank' ? ' active' : ''}`}
-                  onClick={() => setSimTab('bank')}
-                >
-                  {t.simulator.bankTab}
-                </span>
-                <span
-                  className={`sim-tab-title${simTab === 'push' ? ' active' : ''}`}
-                  onClick={() => setSimTab('push')}
-                >
-                  {t.simulator.pushTab}
-                </span>
+              <div className="sim-visual-title">Nodes Routing Map</div>
+              <div className="sim-nodes-row">
+                {currentConfig.nodes.map((n, i) => {
+                  const isActive = step === i;
+                  const isDone = !running && step !== -1 && logs.some(l => l.node === i);
+                  return (
+                    <div key={i} className={`sim-node${isActive ? ' active' : ''}${isDone ? ' success' : ''}`}>
+                      {n.icon}
+                      <span className="sim-node-label">{n.label}</span>
+                    </div>
+                  );
+                })}
               </div>
-
-              {simTab === 'nodes' ? (
-                <div
-                  style={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyStyle: 'center',
-                  }}
-                >
-                  <div className="sim-nodes-row" style={{ marginTop: '40px' }}>
-                    {flowNodes.map((n, i) => {
-                      const isActive = step === i;
-                      const isDone = !running && step !== -1 && logs.some((l) => l.node === i);
-                      return (
-                        <div
-                          key={i}
-                          className={`sim-node${isActive ? ' active' : ''}${
-                            isDone ? ' success' : ''
-                          }`}
-                        >
-                          {n.icon}
-                          <span className="sim-node-label">{n.label}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : simTab === 'database' ? (
-                <div className="sim-db-container">
-                  <div style={{ display: 'flex', gap: '12px', marginBottom: '8px' }}>
-                    <div
-                      style={{
-                        flex: 1,
-                        background: 'var(--bg-strip)',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        border: '1px solid var(--border)',
-                      }}
-                    >
-                      <div style={{ fontSize: '10px', color: 'var(--text-3)' }}>
-                        {t.simulator.dbBalance}
-                      </div>
-                      <div className="sim-db-balance">{mockDB.balance.toLocaleString()}đ</div>
-                    </div>
-                    <div
-                      style={{
-                        flex: 1,
-                        background: 'var(--bg-strip)',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        border: '1px solid var(--border)',
-                      }}
-                    >
-                      <div style={{ fontSize: '10px', color: 'var(--text-3)' }}>
-                        {t.simulator.dbDays}
-                      </div>
-                      <div style={{ fontSize: '18px', fontWeight: 800, color: '#f59e0b' }}>
-                        🏥 {mockDB.daysToEmpty} Days
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '6px',
-                      overflowY: 'auto',
-                      flex: 1,
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: '10px',
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        color: 'var(--text-4)',
-                      }}
-                    >
-                      📂 {t.simulator.mockDbTitle} (PostgreSQL)
-                    </div>
-                    {mockDB.transactions.map((tx) => (
-                      <div key={tx.id} className="sim-db-row">
-                        <span>
-                          📝 {tx.description} ({tx.category})
-                        </span>
-                        <span
-                          style={{ fontWeight: 700, color: tx.amount < 0 ? '#f87171' : '#34d399' }}
-                        >
-                          {tx.amount > 0 ? '+' : ''}
-                          {tx.amount.toLocaleString()}đ
-                        </span>
-                      </div>
-                    ))}
-                    {mockDB.budgets.map((b, i) => (
-                      <div
-                        key={i}
-                        className="sim-db-row"
-                        style={{ borderLeft: '3px solid #7c3aed' }}
-                      >
-                        <span>🎯 Budget {b.category}</span>
-                        <span style={{ color: '#a78bfa', fontWeight: 'bold' }}>
-                          Limit: {b.limit.toLocaleString()}đ
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : simTab === 'bank' ? (
-                <div className="sim-db-container" style={{ gap: '8px' }}>
-                  <div style={{ display: 'flex', gap: '12px' }}>
-                    <div style={{ flex: 1 }}>
-                      <label
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 700,
-                          textTransform: 'uppercase',
-                          color: 'var(--text-3)',
-                          marginBottom: 4,
-                          display: 'block',
-                        }}
-                      >
-                        {t.simulator.bankSelectLabel}
-                      </label>
-                      <select
-                        className="sim-select"
-                        style={{ padding: '8px', fontSize: 12 }}
-                        value={selectedBank}
-                        onChange={(e) => setSelectedBank(e.target.value)}
-                        disabled={linkingBank}
-                      >
-                        <option value="MBBank">MBBank</option>
-                        <option value="Vietcombank">Vietcombank</option>
-                        <option value="Techcombank">Techcombank</option>
-                      </select>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <label
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 700,
-                          textTransform: 'uppercase',
-                          color: 'var(--text-3)',
-                          marginBottom: 4,
-                          display: 'block',
-                        }}
-                      >
-                        {t.simulator.bankInputLabel}
-                      </label>
-                      <input
-                        className="sim-input"
-                        type="text"
-                        value={bankAccNumber}
-                        onChange={(e) => setBankAccNumber(e.target.value)}
-                        disabled={linkingBank}
-                      />
-                    </div>
-                  </div>
-                  <button
-                    className="btn-primary"
-                    style={{ padding: '8px', width: '100%', fontSize: 12, marginTop: 4 }}
-                    onClick={runBankLinking}
-                    disabled={linkingBank || running}
-                  >
-                    <span>{linkingBank ? t.simulator.bankLinking : t.simulator.bankBtn}</span>
-                  </button>
-                  <div
-                    style={{
-                      fontSize: '10px',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      color: 'var(--text-4)',
-                      marginTop: 4,
-                    }}
-                  >
-                    🏦 Linked Accounts List:
-                  </div>
-                  <div className="sim-badge-list">
-                    {mockDB.accounts.map((acc, i) => (
-                      <span key={i} className="sim-acc-badge">
-                        💳 {acc}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="sim-db-container" style={{ gap: '8px' }}>
-                  <div>
-                    <label
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        color: 'var(--text-3)',
-                        marginBottom: 4,
-                        display: 'block',
-                      }}
-                    >
-                      {t.simulator.pushInputLabel}
-                    </label>
-                    <input
-                      className="sim-input"
-                      type="text"
-                      value={pushMsg}
-                      onChange={(e) => setPushMsg(e.target.value)}
-                      disabled={sendingPush}
-                    />
-                  </div>
-                  <button
-                    className="btn-primary"
-                    style={{ padding: '8px', width: '100%', fontSize: 12 }}
-                    onClick={runWebPushNotification}
-                    disabled={sendingPush || running}
-                  >
-                    <span>{sendingPush ? t.simulator.pushBtnLoading : t.simulator.pushBtn}</span>
-                  </button>
-                  <div style={{ fontSize: 10, color: 'var(--text-3)', fontWeight: 600 }}>
-                    {t.simulator.pushActiveCount}{' '}
-                    <span style={{ color: 'var(--accent)' }}>
-                      3 Devices (Chrome / Safari / Firefox)
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <div
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        color: 'var(--text-4)',
-                      }}
-                    >
-                      {t.simulator.pushPhonePreview}
-                    </div>
-                    <div className="mock-phone-frame">
-                      {isScanning ? (
-                        <div style={{ fontSize: 11, color: 'var(--text-3)', fontStyle: 'italic' }}>
-                          📲 Processing Web Push request...
-                        </div>
-                      ) : pushPhoneNotification ? (
-                        <div className="mock-phone-notification">
-                          <div
-                            style={{
-                              fontWeight: 'bold',
-                              fontSize: 10,
-                              color: '#f59e0b',
-                              marginBottom: 2,
-                            }}
-                          >
-                            🏦 Money Guard Notification
-                          </div>
-                          <div>{pushPhoneNotification}</div>
-                        </div>
-                      ) : (
-                        <div style={{ fontSize: 11, color: 'var(--text-3)', fontStyle: 'italic' }}>
-                          * Mobile phone screen idle. Click "Emit Push" above...
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="sim-terminal">
               <div className="sim-terminal-content">
                 {logs.map((l, i) => (
-                  <div
-                    key={i}
-                    className={`sim-terminal-line ${
-                      l.type === 'ok'
-                        ? ''
-                        : l.type === 'err'
-                        ? 'err'
-                        : l.type === 'sys'
-                        ? 'sys'
-                        : 'info'
-                    }`}
-                  >
-                    {`[MONEY-GUARD-SERVER] > `}
-                    {l.text}
+                  <div key={i} className={`sim-terminal-line ${l.type === 'ok' ? '' : l.type === 'err' ? 'err' : l.type === 'sys' ? 'sys' : 'info'}`}>
+                    {`> `}{l.text}
                   </div>
                 ))}
                 {logs.length === 0 && (
                   <div className="sim-terminal-line sys" style={{ fontStyle: 'italic' }}>
-                    * Console Idle. Click any interactive preset or testing panel to simulate...
+                    * Output Console Idle. Click "Trigger Workflow" to start simulation...
                   </div>
                 )}
                 <div ref={terminalEndRef} />
