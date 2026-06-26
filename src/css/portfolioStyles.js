@@ -329,17 +329,94 @@ a { text-decoration:none; }
 .theme-palette { display:flex; gap:6px; align-items:center; }
 
 @media (max-width:768px) {
-  .grid-2 { grid-template-columns:1fr; }
-  .skills-grid { grid-template-columns:1fr; }
-  .sim-grid { grid-template-columns:1fr; }
-  .nav-links { gap:2px; }
-  .nav-link { padding:6px 6px; font-size:10px; }
-  .section { padding:60px 16px; }
-  .hero-section { padding-top:60px; }
-  .floating-tag { display:none; }
-  .nav-controls { gap:4px; }
-  .lang-btn span { display:none; }
-  .theme-palette { display:none; }
-}
+    /* Chuyển navbar thành Grid 2 tầng gọn gàng */
+    .nav {
+      display: grid;
+      grid-template-areas: 
+        "logo controls"
+        "links links";
+      grid-template-columns: 1fr auto;
+      height: auto;
+      padding: 8px 16px;
+      gap: 8px;
+      backdrop-filter: blur(20px);
+    }
+  
+    /* Định vị Logo ở tầng 1 bên trái */
+    .nav-logo {
+      grid-area: logo;
+      font-size: 14px;
+      align-self: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  
+    /* Định vị Cụm nút bấm ở tầng 1 bên phải */
+    .nav-controls {
+      grid-area: controls;
+      margin-left: 0;
+      align-self: center;
+      gap: 6px;
+    }
+  
+    /* Tầng 2: Thanh menu trượt ngang bằng cử chỉ vuốt chạm cực mượt */
+    .nav-links {
+      grid-area: links;
+      display: flex;
+      overflow-x: auto; /* Cho phép cuộn ngang */
+      white-space: nowrap;
+      gap: 6px;
+      padding: 4px 0 8px 0;
+      width: 100%;
+      margin-left: 0;
+      justify-content: flex-start;
+      -webkit-overflow-scrolling: touch; /* Tạo hiệu ứng cuộn mượt trên iOS */
+      scrollbar-width: none; /* Ẩn scrollbar trên Firefox */
+    }
+  
+    /* Ẩn thanh cuộn xấu xí trên Chrome/Safari/Opera */
+    .nav-links::-webkit-scrollbar {
+      display: none; 
+    }
+  
+    /* Tối ưu kích thước các thẻ điều hướng trên mobile */
+    .nav-link {
+      padding: 6px 10px;
+      font-size: 11px;
+      flex-shrink: 0; /* Không cho phép co cụm chữ */
+      background: ${isDark ? '#1e293b55' : '#f1f5f999'};
+      border-radius: 6px;
+    }
+  
+    /* Điều chỉnh khoảng cách phần Hero để không bị Navbar đè lên */
+    .hero-section {
+      padding-top: 110px;
+    }
+  
+    /* Ẩn bớt các hiệu ứng bay nhảy không cần thiết trên mobile để mượt máy */
+    .floating-tag {
+      display: none;
+    }
+  
+    .section {
+      padding: 50px 16px;
+    }
+  
+    /* Cho phép hiển thị lại bảng màu chuyển đổi trên mobile */
+    .theme-palette {
+      display: flex !important; 
+      gap: 4px;
+    }
+    
+    .theme-btn {
+      width: 20px;
+      height: 20px;
+    }
+  
+    .lang-btn span {
+      display: none; /* Ẩn chữ EN/VI, chỉ giữ lại icon cờ trên mobile cho gọn */
+    }
+  }
   `;
 };
