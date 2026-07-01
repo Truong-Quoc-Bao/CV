@@ -226,7 +226,7 @@ function Nav({ lang, setLang, isDark, setIsDark, theme, setTheme, t }) {
 
   return (
     <nav className="nav">
-      <span className="nav-logo text-gradient">Trương Quốc Bảo - Portfolial</span>
+      <span className="nav-logo text-gradient">Trương Quốc Bảo - Portfolio</span>
       <div className="nav-links">
         {sections.map((s) => (
           <button

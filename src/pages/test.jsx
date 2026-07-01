@@ -195,7 +195,16 @@ function SkillBar({ name, level, delay = 0 }) {
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 function Nav({ lang, setLang, isDark, setIsDark, theme, setTheme, t }) {
   const [active, setActive] = useState('hero');
-  const sections = ['hero', 'skills', 'experience', 'projects', 'simulator', 'goals', 'testimonials', 'contact'];
+  const sections = [
+    'hero',
+    'skills',
+    'experience',
+    'projects',
+    'simulator',
+    'goals',
+    'testimonials',
+    'contact',
+  ];
   const labels = t.nav;
 
   useEffect(() => {
@@ -217,7 +226,7 @@ function Nav({ lang, setLang, isDark, setIsDark, theme, setTheme, t }) {
 
   return (
     <nav className="nav">
-      <span className="nav-logo text-gradient">Trương Quốc Bảo - Portfolial</span>
+      <span className="nav-logo text-gradient">Trương Quốc Bảo - Portfolio</span>
       <div className="nav-links">
         {sections.map((s) => (
           <button
@@ -550,20 +559,60 @@ function SimulatorSection({ t }) {
         { label: 'Gemini AI', icon: '🧠' },
         { label: 'Microservice API', icon: '⚙️' },
         { label: 'Proactive Health', icon: '📊' },
-        { label: 'Web Push', icon: '📲' }
+        { label: 'Web Push', icon: '📲' },
       ],
       steps: [
-        { node: 0, text: '📥 [BẮT ĐẦU] POST /webhook/bank-transfer - Payload nhận từ SePay...', type: 'info' },
-        { node: 0, text: '🔍 Kiểm tra chữ ký xác thực WEBHOOK_SECRET & requireUserId...', type: 'sys' },
-        { node: 1, text: '🧠 GEMINI AI: Đang làm sạch chuỗi content và phân loại danh mục tự động...', type: 'sys' },
-        { node: 1, text: '💡 GEMINI AI: Trả về JSON: {"clean_name": "Nguyen Van A chuyển khoản", "category_name": "Lương"}', type: 'info' },
-        { node: 2, text: '⚙️ SERVICE CLIENT: Tìm/tạo tài khoản mặc định và category qua API...', type: 'sys' },
-        { node: 2, text: '⚙️ SERVICE CLIENT: Gọi createTransactionApi(). Transaction event phát ra...', type: 'sys' },
-        { node: 3, text: '📊 PROACTIVE AI: Thực thi hàm getProactiveContext() để phân tích ví tiền...', type: 'sys' },
-        { node: 3, text: '📊 PROACTIVE AI: Số dư an toàn. TB đốt tiền: 120k/ngày. daysToEmpty = 25 ngày.', type: 'info' },
-        { node: 4, text: '📲 WEB PUSH: Gọi sendPushNotification(). Kích hoạt VAPID Keys...', type: 'sys' },
-        { node: -1, text: ' Ting Ting! Money Guard thông báo: Nhận 2,000,000đ từ "Nguyen Van A". Đã ghi sổ!', type: 'ok' }
-      ]
+        {
+          node: 0,
+          text: '📥 [BẮT ĐẦU] POST /webhook/bank-transfer - Payload nhận từ SePay...',
+          type: 'info',
+        },
+        {
+          node: 0,
+          text: '🔍 Kiểm tra chữ ký xác thực WEBHOOK_SECRET & requireUserId...',
+          type: 'sys',
+        },
+        {
+          node: 1,
+          text: '🧠 GEMINI AI: Đang làm sạch chuỗi content và phân loại danh mục tự động...',
+          type: 'sys',
+        },
+        {
+          node: 1,
+          text: '💡 GEMINI AI: Trả về JSON: {"clean_name": "Nguyen Van A chuyển khoản", "category_name": "Lương"}',
+          type: 'info',
+        },
+        {
+          node: 2,
+          text: '⚙️ SERVICE CLIENT: Tìm/tạo tài khoản mặc định và category qua API...',
+          type: 'sys',
+        },
+        {
+          node: 2,
+          text: '⚙️ SERVICE CLIENT: Gọi createTransactionApi(). Transaction event phát ra...',
+          type: 'sys',
+        },
+        {
+          node: 3,
+          text: '📊 PROACTIVE AI: Thực thi hàm getProactiveContext() để phân tích ví tiền...',
+          type: 'sys',
+        },
+        {
+          node: 3,
+          text: '📊 PROACTIVE AI: Số dư an toàn. TB đốt tiền: 120k/ngày. daysToEmpty = 25 ngày.',
+          type: 'info',
+        },
+        {
+          node: 4,
+          text: '📲 WEB PUSH: Gọi sendPushNotification(). Kích hoạt VAPID Keys...',
+          type: 'sys',
+        },
+        {
+          node: -1,
+          text: ' Ting Ting! Money Guard thông báo: Nhận 2,000,000đ từ "Nguyen Van A". Đã ghi sổ!',
+          type: 'ok',
+        },
+      ],
     },
     {
       nodes: [
@@ -571,21 +620,53 @@ function SimulatorSection({ t }) {
         { label: 'Gemini Engine', icon: '🧠' },
         { label: 'Tag Extractor', icon: '🔎' },
         { label: 'CRUD Service', icon: '✏️' },
-        { label: 'Socket Broadcast', icon: '📡' }
+        { label: 'Socket Broadcast', icon: '📡' },
       ],
       steps: [
         { node: 0, text: '💬 USER INPUT: "Xóa hộ tao món cafe 50k vừa nãy đi Bảo"', type: 'info' },
-        { node: 0, text: '🛡️ CHỐT CHẶN: Kiểm tra double-submit dựa trên lastUserMessage trong 3s...', type: 'sys' },
-        { node: 1, text: '🧠 GEMINI ENGINE: Bắt đầu sinh phản hồi chat kèm phân tích ý định...', type: 'sys' },
-        { node: 1, text: '🧠 GEMINI ENGINE: Sinh thành công. Trả về tag lệnh: <delete_transaction>{"id": 412}</delete_transaction>', type: 'info' },
+        {
+          node: 0,
+          text: '🛡️ CHỐT CHẶN: Kiểm tra double-submit dựa trên lastUserMessage trong 3s...',
+          type: 'sys',
+        },
+        {
+          node: 1,
+          text: '🧠 GEMINI ENGINE: Bắt đầu sinh phản hồi chat kèm phân tích ý định...',
+          type: 'sys',
+        },
+        {
+          node: 1,
+          text: '🧠 GEMINI ENGINE: Sinh thành công. Trả về tag lệnh: <delete_transaction>{"id": 412}</delete_transaction>',
+          type: 'info',
+        },
         { node: 2, text: '🔎 TAG EXTRACTOR: Chạy Regex bóc tách nội dung XML tag...', type: 'sys' },
-        { node: 2, text: '🔎 TAG EXTRACTOR: Trích xuất thành công JSON payload: { id: 412 }', type: 'info' },
-        { node: 3, text: '✏️ CRUD SERVICE: Gọi deleteTransactionApi(currentUserId, 412)...', type: 'sys' },
-        { node: 3, text: '✏️ CRUD SERVICE: API phản hồi 200 OK. Giao dịch đã xóa khỏi DB.', type: 'info' },
-        { node: 4, text: '📡 SOCKET BROADCAST: Bắn sự kiện "money-guard-sync" về phía Client...', type: 'sys' },
-        { node: -1, text: '🎉 SUCCESS: Ảo thuật đồng bộ xong! Giao diện Web tự động cập nhật giảm 50,000đ.', type: 'ok' }
-      ]
-    }
+        {
+          node: 2,
+          text: '🔎 TAG EXTRACTOR: Trích xuất thành công JSON payload: { id: 412 }',
+          type: 'info',
+        },
+        {
+          node: 3,
+          text: '✏️ CRUD SERVICE: Gọi deleteTransactionApi(currentUserId, 412)...',
+          type: 'sys',
+        },
+        {
+          node: 3,
+          text: '✏️ CRUD SERVICE: API phản hồi 200 OK. Giao dịch đã xóa khỏi DB.',
+          type: 'info',
+        },
+        {
+          node: 4,
+          text: '📡 SOCKET BROADCAST: Bắn sự kiện "money-guard-sync" về phía Client...',
+          type: 'sys',
+        },
+        {
+          node: -1,
+          text: '🎉 SUCCESS: Ảo thuật đồng bộ xong! Giao diện Web tự động cập nhật giảm 50,000đ.',
+          type: 'ok',
+        },
+      ],
+    },
   ];
 
   const currentConfig = flowsConfig[flow];
@@ -637,10 +718,24 @@ function SimulatorSection({ t }) {
         <Reveal delay={100}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div className="sim-controls">
-              <label style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6, color: 'var(--text-4)' }}>
+              <label
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: 1,
+                  textTransform: 'uppercase',
+                  marginBottom: 6,
+                  color: 'var(--text-4)',
+                }}
+              >
                 {t.simulator.selectFlow}
               </label>
-              <select className="sim-select" onChange={handleFlowChange} value={flow} disabled={running}>
+              <select
+                className="sim-select"
+                onChange={handleFlowChange}
+                value={flow}
+                disabled={running}
+              >
                 {t.simulator.flows.map((f, i) => (
                   <option key={i} value={i}>
                     {f.name}
@@ -648,14 +743,26 @@ function SimulatorSection({ t }) {
                 ))}
               </select>
             </div>
-            <div className="sim-desc-box">
-              {t.simulator.flows[flow].desc}
-            </div>
+            <div className="sim-desc-box">{t.simulator.flows[flow].desc}</div>
             <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
-              <button className="btn-primary" onClick={runSimulation} disabled={running} style={{ padding: '10px 24px', fontSize: 13 }}>
+              <button
+                className="btn-primary"
+                onClick={runSimulation}
+                disabled={running}
+                style={{ padding: '10px 24px', fontSize: 13 }}
+              >
                 <span>{running ? t.simulator.running : t.simulator.runBtn}</span>
               </button>
-              <button className="btn-outline" onClick={() => { setLogs([]); setStep(-1); setRunning(false); }} disabled={running} style={{ padding: '10px 24px', fontSize: 13 }}>
+              <button
+                className="btn-outline"
+                onClick={() => {
+                  setLogs([]);
+                  setStep(-1);
+                  setRunning(false);
+                }}
+                disabled={running}
+                style={{ padding: '10px 24px', fontSize: 13 }}
+              >
                 {t.simulator.resetBtn}
               </button>
             </div>
@@ -669,9 +776,12 @@ function SimulatorSection({ t }) {
               <div className="sim-nodes-row">
                 {currentConfig.nodes.map((n, i) => {
                   const isActive = step === i;
-                  const isDone = !running && step !== -1 && logs.some(l => l.node === i);
+                  const isDone = !running && step !== -1 && logs.some((l) => l.node === i);
                   return (
-                    <div key={i} className={`sim-node${isActive ? ' active' : ''}${isDone ? ' success' : ''}`}>
+                    <div
+                      key={i}
+                      className={`sim-node${isActive ? ' active' : ''}${isDone ? ' success' : ''}`}
+                    >
                       {n.icon}
                       <span className="sim-node-label">{n.label}</span>
                     </div>
@@ -683,8 +793,20 @@ function SimulatorSection({ t }) {
             <div className="sim-terminal">
               <div className="sim-terminal-content">
                 {logs.map((l, i) => (
-                  <div key={i} className={`sim-terminal-line ${l.type === 'ok' ? '' : l.type === 'err' ? 'err' : l.type === 'sys' ? 'sys' : 'info'}`}>
-                    {`> `}{l.text}
+                  <div
+                    key={i}
+                    className={`sim-terminal-line ${
+                      l.type === 'ok'
+                        ? ''
+                        : l.type === 'err'
+                        ? 'err'
+                        : l.type === 'sys'
+                        ? 'sys'
+                        : 'info'
+                    }`}
+                  >
+                    {`> `}
+                    {l.text}
                   </div>
                 ))}
                 {logs.length === 0 && (
